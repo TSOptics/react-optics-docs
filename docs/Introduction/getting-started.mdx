@@ -1,0 +1,176 @@
+import MdxImage from "../../src/components/Image";
+
+# Getting Started
+
+**react-optix** is a state managment library for React that uses structures called **optics** to focus on slices of your store.  
+Optics make reading and updating these slices easy. You can **compose** optics to go deeper in your store !
+
+**react-optix** is lightweight (> 2kB), unopinionated, typesafe and strives to feel like a natural extension of React.
+
+## Requirements
+
+react-optix requires **React** `16.3` or higher.
+
+**TypeScript** is optional but strongly recommended (version `4.1` or higher).
+
+## Installation
+
+With npm:
+
+```bash
+npm install react-optix
+```
+
+With yarn:
+
+```bash
+yarn add react-optix
+```
+
+## Basic example
+
+No state managment documentation is truly complete without a simple counter example so let's get started:
+
+### Provider
+
+First we need to wrap our app with a Provider so we can access the store everywhere:
+
+```tsx title=App.tsx
+import { Provider } from "react-optix";
+
+const App = () => {
+  return (
+    <Provider>
+      <Counters />
+    </Provider>
+  );
+};
+```
+
+### Creating the store
+
+Next we can create a store by calling `createStore` and passing it an initial value.  
+It returns an optic focusing on the store.
+
+```tsx
+import { createStore } from "react-optix";
+
+const onState = createStore({
+  counters: {
+    counterA: { value: 0, step: 1 },
+    counterB: { value: 0, step: 2 },
+  },
+});
+```
+
+Here the optic `onState` focus on the root of your store.
+
+### Focusing
+
+To get the optic focusing on the value in counterA, call `focus` on the optic `onState` with the right path.  
+Let the **code completion** guide you !
+
+<MdxImage src="path-completion-light.png" srcDark="path-completion-dark.png" />
+
+### Using the optic in a component
+
+Just call the hook `useOptic` with your optic ! It has the same API as React's `useState`.
+
+```tsx title=Counter.tsx
+import { useOptic } from "react-optix";
+
+const Counter = () => {
+  const [counterValue, setCounterValue] = useOptic(onValueA);
+
+  return (
+    <div>
+      <button onClick={() => setCounterValue((prev) => prev + 1)}>
+        increment
+      </button>
+      {counterValue}
+      <button onClick={() => setCounterValue((prev) => prev - 1)}>
+        decrement
+      </button>
+    </div>
+  );
+};
+```
+
+The setter returned by `useOptic` allows you to change `counterValue` just like it was local state, you don't need to worry that it's part of a complex store object.
+
+And that's it !
+
+### Optics as props
+
+Don't we also have a counterB in our store ?  
+Let's change things up and make our component `Counter` take an optic as a prop instead of directly referencing `onValueA`.
+
+```tsx title=Counter.tsx
+import { useOptic } from "react-optix";
+
+const Counter = ({ onCounterValue }) => {
+  const [counterValue, setCounterValue] = useOptic(onCounterValue);
+
+  ...
+};
+```
+
+Now we can call two instances of `Counter`, each with its own optic, focusing on its own part of the state.
+
+```tsx title=Counters.tsx
+const onValueA = onState.focus("counters.counterA.value");
+const onValueB = onState.focus("counters.counterB.value");
+
+const Counters = () => {
+  return (
+    <>
+      <Counter onCounterValue={onValueA} />
+      <Counter onCounterValue={onValueB} />
+    </>
+  );
+};
+```
+
+## Bonus
+
+In our store we also defined a `step` attribute for both counters.
+To access it in our component let's change some things. Instead of passing an optic focusing on the value let's take a step back and focus on the complete counter instead. We will then focus on the value and the step in the component.
+
+```tsx file=Counter.tsx
+import { useOptic } from "react-optix";
+
+const Counter = ({ onCounter }) => {
+  const [value, setValue] = useOptic(onCounter.focus("value"));
+  const [step, setStep] = useOptic(onCounter.focus("step"));
+
+  return (
+    <div>
+      <button onClick={() => setValue((prev) => prev + step)}>increment</button>
+      {counterValue}
+      <button onClick={() => setValue((prev) => prev - step)}>decrement</button>
+      <input
+        type="number"
+        value={step}
+        onChange={(event) => setStep(event.target.value)}
+      />
+    </div>
+  );
+};
+```
+
+```tsx file=Counters.tsx
+const onCounterA = onStore.focus("counters.counterA");
+const onCounterB = onStore.focus("counters.counterB");
+
+const Counters = () => {
+  return (
+    <>
+      <Counter onCounterValue={onCounterA} />
+      <Counter onCounterValue={onCounterB} />
+    </>
+  );
+};
+```
+
+As you can see optics are very flexible, you can compose them in many ways.  
+Passing them down your components hierarchie as props works very well. It feels just like passing down properties of a plain js object but instead it's a global reactive store !
