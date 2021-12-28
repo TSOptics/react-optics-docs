@@ -1,8 +1,11 @@
 import MdxImage from "../../src/components/Image";
+import Counter from "../../src/components/getting-started/Counter";
+import Counters from "../../src/components/getting-started/Counters";
+import CountersWithStep from "../../src/components/getting-started/CountersWithStep";
 
 # Getting Started
 
-**react-optix** is a state managment library for React that uses structures called **optics** to focus on slices of your store.  
+**react-optix** is a state management library for React that uses structures called **optics** to focus on slices of your store.  
 Optics make reading and updating these slices easy. You can **compose** optics to go deeper in your store !
 
 **react-optix** is lightweight (> 2kB), unopinionated, typesafe and strives to feel like a natural extension of React.
@@ -11,7 +14,7 @@ Optics make reading and updating these slices easy. You can **compose** optics t
 
 react-optix requires **React** `16.3` or higher.
 
-**TypeScript** is optional but strongly recommended (version `4.1` or higher).
+**TypeScript** is optional but strongly recommended (version `4.1` or higher, strict mode).
 
 ## Installation
 
@@ -29,7 +32,7 @@ yarn add react-optix
 
 ## Basic example
 
-No state managment documentation is truly complete without a simple counter example so let's get started:
+No state management documentation is truly complete without a simple counter as an example, so let's get started:
 
 ### Provider
 
@@ -50,7 +53,7 @@ const App = () => {
 ### Creating the store
 
 Next we can create a store by calling `createStore` and passing it an initial value.  
-It returns an optic focusing on the store.
+It returns an **optic** focusing on the store.
 
 ```tsx
 import { createStore } from "react-optix";
@@ -63,7 +66,7 @@ const onState = createStore({
 });
 ```
 
-Here the optic `onState` focus on the root of your store.
+Here the optic `onState` focuses on the root of your store.
 
 ### Focusing
 
@@ -96,7 +99,13 @@ const Counter = () => {
 };
 ```
 
-The setter returned by `useOptic` allows you to change `counterValue` just like it was local state, you don't need to worry that it's part of a complex store object.
+<Counter />
+
+#
+
+The setter returned by `useOptic` allows you to change `counterValue`
+just like it was local state, you don't need to worry that it's part of a complex
+store object.
 
 And that's it !
 
@@ -117,26 +126,33 @@ const Counter = ({ onCounterValue }) => {
 
 Now we can call two instances of `Counter`, each with its own optic, focusing on its own part of the state.
 
-```tsx title=Counters.tsx
+```tsx title=Counters.tsx {3-4,11-12}
+import { useOptic } from "react-optix";
+
 const onValueA = onState.focus("counters.counterA.value");
 const onValueB = onState.focus("counters.counterB.value");
 
 const Counters = () => {
+  const [counters] = useOptic(onState.focus("counters"));
   return (
-    <>
+    ...
+      sum = {counters.counterA.value + counters.counterB.value}
       <Counter onCounterValue={onValueA} />
       <Counter onCounterValue={onValueB} />
-    </>
+    ...
   );
 };
 ```
 
+<Counters />
+
 ## Bonus
 
 In our store we also defined a `step` attribute for both counters.
-To access it in our component let's change some things. Instead of passing an optic focusing on the value let's take a step back and focus on the complete counter instead. We will then focus on the value and the step in the component.
+To access it in our component let's change some things.  
+Instead of passing to our `Counter` component an optic focusing on the value let's take a step back and focus on the complete counter instead. We will then focus on the value and the step separately in the component.
 
-```tsx file=Counter.tsx
+```tsx file=Counter.tsx {4-5,12-16}
 import { useOptic } from "react-optix";
 
 const Counter = ({ onCounter }) => {
@@ -146,31 +162,46 @@ const Counter = ({ onCounter }) => {
   return (
     <div>
       <button onClick={() => setValue((prev) => prev + step)}>increment</button>
-      {counterValue}
+      {value}
       <button onClick={() => setValue((prev) => prev - step)}>decrement</button>
       <input
         type="number"
         value={step}
-        onChange={(event) => setStep(event.target.value)}
+        onChange={(event) => setStep(event.target.valueAsNumber)}
       />
     </div>
   );
 };
 ```
 
-```tsx file=Counters.tsx
+```tsx file=Counters.tsx {3-4,11-12}
+import { useOptic } from "react-optix";
+
 const onCounterA = onStore.focus("counters.counterA");
 const onCounterB = onStore.focus("counters.counterB");
 
 const Counters = () => {
+  const [counters] = useOptic(onState.focus("counters"));
   return (
-    <>
-      <Counter onCounterValue={onCounterA} />
-      <Counter onCounterValue={onCounterB} />
-    </>
+    ...
+      sum: {counters.counterA.value + counters.counterB.value}
+      <Counter onCounter={onCounterA} />
+      <Counter onCounter={onCounterB} />
+    ...
   );
 };
 ```
 
+<CountersWithStep />
+
+#
+
 As you can see optics are very flexible, you can compose them in many ways.  
-Passing them down your components hierarchie as props works very well. It feels just like passing down properties of a plain js object but instead it's a global reactive store !
+Passing them down your components hierarchy as props works very well. It feels just like passing down properties of a plain js object but instead it's a global reactive store !
+
+#
+
+:::tip
+In the this example the next value is computed from two pieces of state (the previous value and step).  
+If you are thinking **reducer** you'd be right !
+:::

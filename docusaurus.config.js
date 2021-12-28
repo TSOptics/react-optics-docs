@@ -4,7 +4,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
   title: "React-Optix",
-  tagline: "Composable state managment for react",
+  tagline: "Composable state management for react",
   url: "https://your-docusaurus-test-site.com",
   baseUrl: "/",
   onBrokenLinks: "throw",
@@ -38,7 +38,7 @@ module.exports = {
           items: [
             {
               label: "Tutorial",
-              to: "/docs/getting-started",
+              to: "/docs/Introduction/getting-started",
             },
           ],
         },
