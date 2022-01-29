@@ -1,0 +1,368 @@
+---
+title: Core Concepts
+sidebar_position: 2
+---
+
+# Core Concepts
+
+## Optics
+
+An optic is a composable pair of getter and setter to access and **transform immutable data**.
+
+Consider the following structure:
+
+```ts
+const planets = {
+    earth: {
+        Europe: {
+            France: {
+                Paris: {
+                    arrondissements: [
+                        { inhabitants: 17_100 },
+                        { inhabitants: 22_390 },
+                        { inhabitants: 35_991 },
+                        { inhabitants: 27_769 },
+                        { inhabitants: 60_179 }
+                    ]
+                }
+            }
+        }
+    }
+};
+```
+
+Increasing by one the number of inhabitant of the third arrondissement of Paris is trivial in a mutable context:
+
+```ts
+planets.earth.Europe.France.Paris.arrondissements[2].inhabitants += 1;
+```
+
+However in React we need to make an **immutable update** and create a new `planets` object, otherwise React will not trigger a rerender since the reference didn't change.
+
+```ts {20-21}
+const updatedPlanets = {
+    ...planets,
+    earth: {
+        ...planets.earth,
+        Europe: {
+            ...planets.earth.Europe,
+            France: {
+                ...planets.earth.Europe.France,
+                Paris: {
+                    ...planets.earth.Europe.France.Paris,
+                    arrondissements: [
+                        ...planets.earth.Europe.France.Paris.arrondissements.slice(
+                            0,
+                            2
+                        ),
+                        {
+                            ...planets.earth.Europe.France.Paris
+                                .arrondissements[2],
+                            inhabitants:
+                                planets.earth.Europe.France.Paris
+                                    .arrondissements[2].inhabitants + 1
+                        },
+                        ...planets.earth.Europe.France.Paris.arrondissements.slice(
+                            3
+                        )
+                    ]
+                }
+            }
+        }
+    }
+};
+```
+
+Here the highlighted line is the information, the rest is just noise.  
+Such code is extremely verbose and error prone and it only gets worse the deeper we go.  
+With an optic it becomes trivial again:
+
+```tsx
+// planetStore.ts
+import { createStore, useOptic } from 'react-optics';
+
+const onPlanets = createStore(planets);
+
+const on3rdArrInhabitants = onPlanets
+    .focus('earth.Europe.France.Paris.arrondissements')
+    .focus(2)
+    .focus('inhabitants');
+
+// Paris3rd.tsx
+const [inhabitants, setInhabitants] = useOptic(on3rdArrInhabitants);
+
+setInhabitants((prev) => prev + 1);
+```
+
+Optics have some other useful properties.  
+They are ...
+
+-   ### Type-safe:
+    You can only pass a valid path to `focus` or you'll get a compile error.  
+    Your editor's code completion will show you all possible paths.
+-   ### Null-safe:
+
+    If an element is possibly null or undefined then the **optional chaining operator** (`?.`) will be used.
+
+    ```tsx {6,12,16}
+    // store.ts
+    type User = {
+      name: string;
+      age: number;
+      contact?: {
+          phone: number;
+      };
+    };
+
+    const onUser = createStore<User>({ name: "Vincent", age: 28, contact: { phone: "999-999-999" } });
+
+    const onPhone = onUser.focus("contact?.phone");
+
+    // Dialer.tsx
+    ...
+    const [phoneNumber] = useOptic(onPhone);
+    ...
+    ```
+
+    Here the type of phoneNumber is `number | undefined`.
+
+-   ### Composable:
+
+    If you have an optic from **A to B** and another one from **B to C** you can compose them to create a new optic from **A to C**.
+
+    ```ts
+    const initialPlayerState = {
+        id: 1,
+        hp: 20,
+        inventory: {
+            primaryWeapon: {
+                durability: 10,
+                damageTo: {
+                    monsters: 3,
+                    humans: 5,
+                    spirits: 0
+                }
+            }
+        }
+    };
+
+    const onPlayers = createStore({
+        playerA: { ...initialPlayerState, id: 1 },
+        playerB: { ...initialPlayerState, id: 2 }
+    });
+
+    const onPayerA = onPlayers.focus('playerA');
+    const onPayerB = onPlayers.focus('playerB');
+
+    // Headless optic
+    const onDamageToMonsters = optic<typeof initialPlayerState>().focus(
+        'inventory.primaryWeapon.damageTo.monsters'
+    );
+
+    // focuses on the damage to monsters from playerA's primary
+    onPlayerA.compose(onDamageToMonsters);
+
+    // focuses on the damage to monsters from playerB's primary
+    onPlayerB.compose(onDamageToMonsters);
+    ```
+
+    :::info Headless optic
+    A headless optic doesn't originate from `createStore` but is instead created with `optic()`.  
+    They are useful when composed with stateful optics as shown above.
+    :::
+
+## UI and state: connecting trees
+
+### When UI mirrors the state
+
+Often times in React the structure of our UI will mirror the structure of our state.  
+To illustrate this let's create a simple game menu.  
+Our game state consists of two players each with its own inventory containing two weapons with their own stats:
+
+```ts
+const gameState = {
+    playerList: [
+        {
+            id: 1,
+            name: 'playerA',
+            hp: 20,
+            inventory: [
+                {
+                    id: 1,
+                    name: 'rusty sword',
+                    durability: 3,
+                    damageTo: { monsters: 4, humans: 3, spirits: 0 }
+                },
+                {
+                    id: 2,
+                    name: 'silver dagger',
+                    durability: 7,
+                    damageTo: { monsters: 8, humans: 2, spirits: 0 }
+                }
+            ]
+        },
+        {
+            id: 2,
+            name: 'playerB',
+            hp: 17,
+            inventory: [
+                {
+                    id: 3,
+                    name: 'magical staff',
+                    durability: 10,
+                    damageTo: { monsters: 2, humans: 1, spirits: 10 }
+                },
+                {
+                    id: 4,
+                    name: 'wooden stick',
+                    durability: 2,
+                    damageTo: { monsters: 1, humans: 1, spirits: 0 }
+                }
+            ]
+        }
+    ]
+};
+```
+
+Our React components would look like this:
+
+```tsx
+const Game = () => {
+    return gameState.playerList.map((player) => <Player player={player} />);
+};
+
+const Player = ({ player }) => {
+    return player.inventory.map((weapon) => <Weapon weapon={weapon} />);
+};
+
+const Weapon = ({ weapon }) => {
+    return (
+        <div>
+            <div>name: {weapon.name}</div>
+            <div>durability: {weapon.durability}</div>
+            <WeaponDamage stats={weapon.damageTo} />
+        </div>
+    );
+};
+
+const WeaponStats = ({ damageTo }) => {};
+```
+
+The `Game` component calls `Player` components which call `Weapon` components wich in turn call a `WeaponDamage` component.  
+The structure is the same as in our state where the **game** has **players** which have **weapons** which in turn have **damage stats**.
+Since both UI and state are represented as tree data structure in React here we can say the UI tree matches the state tree, it branches at the same place and has leaves at the same place.
+
+In this configuration, using optics to allow our components to modify their slice of game state is trivial.  
+Just pass an **optic focusing on the slice** to your component, instead of passing the slice itself !
+
+```tsx
+const onGameState = createStore(gameState);
+const onPlayerList = onGameState.focus('playerList');
+
+const Game = () => {
+    const [playerList, setPLayerList] = useOptic(onPlayerList);
+
+    return playerList.map((_, index) => (
+        <Player onPlayer={onPlayerList.focus(index)} />
+    ));
+};
+
+const Player = ({ onPlayer }) => {
+    const [player, setPlayer] = useOptic(onPlayer);
+
+    return player.inventory.map((_, index) => (
+        <Weapon onWeapon={onPlayer.focus('inventory').focus(index)} />
+    ));
+};
+
+const Weapon = ({ onWeapon }) => {
+    const [weapon, setWeapon] = useOptic(onWeapon);
+
+    return (
+        <div>
+            <div>name: {weapon.name}</div>
+            <div>durability: {weapon.durability}</div>
+            <WeaponDamage onDamageTo={onWeapon.focus('damageTo')} />
+        </div>
+    );
+};
+
+const WeaponStats = ({ onDamageTo }) => {
+    const [damageTo, setDamageTo] = useOptic(onDamageTo);
+};
+```
+
+Now at each level we have a setter allowing the component to modify its piece of the game state.  
+We did this while keeping the **data flow** the same, it's just that instead of passing a narrower piece of state we pass **an optic focusing on** a narrower piece of state.
+
+:::tip performance
+When creating optics in components it's always a good idea to wrap them in `useMemo`.  
+See more in the performance section.
+:::
+
+### When UI diverges from the state
+
+Now that we saw that optics are ideal to connect your UI tree to your state tree when they are similar, what about when they are dissimilar ?  
+For example what if we want to display at the top of our UI the weapon with the lowest durability in the whole game ?
+
+```tsx {6}
+const Game = () => {
+    const [playerList, setPLayerList] = useOptic(onPlayerList);
+
+    return (
+        <>
+            <AboutToBreak />
+            {playerList.map((_, index) => (
+                <Player onPlayer={onPlayerList.focus(index)} />
+            ))}
+        </>
+    );
+};
+```
+
+Here we have a case of discrepancy between our trees: The UI has a component (`AboutToBreak`) at the **top** of the tree that depends on data at the **bottom** of the state tree (weapons in the inventories).  
+We can bridge the gap with optics:
+
+```tsx
+const onLowestDurability = onPlayerList
+    .map()
+    .focus('inventory')
+    .map()
+    .minBy((weapon) => weapon.durability)
+    .toTotal();
+
+const AboutToBreak = () => {
+    return (
+        <>
+            Most damaged weapon:
+            <Weapon onWeapon={onLowestDurability} />
+        </>
+    );
+};
+```
+
+Here the `onLowestDurability` optic first focuses on all players (first call to `map`) then on their inventory then on all their weapons (second call to `map`) then finally focuses on the weapon with the lowest durability with `minBy`.  
+The combination of the `map` method with other methods like `minBy` or `findFirst` allows us to focus on very specific elements like the most damaged weapon, or the first weapon that deals more than 10 damage to humans or again the player with the most HPs.
+
+:::info
+The final call to `toTotal` is to tell the type system: yes I'm aware that both inventories are arrays that can theoretically be empty but here I know that they are not so I know that my optic will not return undefined.
+:::
+
+It's the ability to express such optics that allows us to connect our UI tree to our state tree and plug the gap between them where they diverge.
+
+You can learn more about `map` and methods like `minBy` in the **map reduce** section.
+
+### Testability and reusability
+
+The other observation we can make is that we have an optic on weapon but `Weapon` also expects an optic on weapon so we're able to reuse the component !  
+We have broken the **hard dependency between components and global state**: here the component only cares that it gets an optic on a weapon, it doesn't care which weapon and nor where does it come from.
+
+It makes components that depends on the global state **more composable and reusable** but it also makes them **more testable**. We just have to create a store with our mock data and pass the resulting optic to the component:
+
+```tsx
+const onMockWeapon = createStore(mockWeapon);
+...
+<Weapon onWeapon={onMockWeapon} />;
+```
+
+You can learn more in the **testing** section.
