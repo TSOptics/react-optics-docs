@@ -1,9 +1,15 @@
 # Motivation
 
-- why immutability is important in React
-- why it is hard in javascript
-- why the alternative sucks (normalizing, immer ?)
-- the power of state tree
-- how functional programming already solved the problem
-- how optics unlock this power for immutable structures
-- how react-optix brings the concept to react thanks to typescript, hooks, an idiomatic js api and previous art on react state management.
+In react a component is a piece of ui, logic and state that defines its contract via its props. It is this contract that makes them composable and give React its power.
+
+-   why immutability is important in React
+-   why it is hard in javascript
+-   why the alternative sucks (normalizing, immer ?)
+-   the power of state tree
+-   how functional programming already solved the problem
+-   how optics unlock this power for immutable structures
+-   how react-optics brings the concept to react thanks to typescript, hooks, an idiomatic js api and previous art on react state management.
+
+In React hoisting your state up in a single place (store or context) is a common practice to share state across your app.
+It allows us to access global state from anywhere in the app
+However such practice comes with signiificant drawbacks and clash with react's principles.

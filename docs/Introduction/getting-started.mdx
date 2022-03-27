@@ -9,14 +9,14 @@ import CountersWithStep from '../../src/components/getting-started/CountersWithS
 
 # Getting Started
 
-**react-optix** is a state management library for React that uses structures called **optics** to focus on slices of your store.  
+**react-optics** is a state management library for React that uses structures called **optics** to focus on slices of your store.  
 Optics make reading and updating these slices easy. You can **compose** optics to go deeper in your store !
 
-**react-optix** is lightweight (> 2kB), unopinionated, typesafe and strives to feel like a natural extension of React.
+**react-optics** is lightweight (> 2kB), unopinionated, typesafe and strives to feel like a natural extension of React.
 
 ## Requirements
 
-react-optix requires **React** `16.3` or higher.
+react-optics requires **React** `16.3` or higher.
 
 **TypeScript** is optional but strongly recommended (version `4.1` or higher, strict mode).
 
@@ -25,13 +25,13 @@ react-optix requires **React** `16.3` or higher.
 With npm:
 
 ```bash
-npm install react-optix
+npm install react-optics
 ```
 
 With yarn:
 
 ```bash
-yarn add react-optix
+yarn add react-optics
 ```
 
 ## Basic example
@@ -44,7 +44,7 @@ First we need to wrap our app with a Provider so we can access the store everywh
 You'll only have to it once.
 
 ```tsx title=App.tsx
-import { Provider } from 'react-optix';
+import { Provider } from 'react-optics';
 
 const App = () => {
     return (
@@ -61,7 +61,7 @@ Next we can create a store by calling `createStore` and passing it an initial va
 It returns an **optic** focusing on the store.
 
 ```tsx
-import { createStore } from 'react-optix';
+import { createStore } from 'react-optics';
 
 const onState = createStore({
     counters: {
@@ -85,7 +85,7 @@ Let the **code completion** guide you !
 Just call the hook `useOptic` with your optic ! It has the same API as React's `useState`.
 
 ```tsx title=Counter.tsx
-import { useOptic } from 'react-optix';
+import { useOptic } from 'react-optics';
 
 const Counter = () => {
     const [counterValue, setCounterValue] = useOptic(onValueA);
@@ -120,7 +120,7 @@ Don't we also have a counterB in our store ?
 Let's change things up and make our component `Counter` take an optic as a prop instead of directly referencing `onValueA`.
 
 ```tsx title=Counter.tsx
-import { useOptic } from "react-optix";
+import { useOptic } from "react-optics";
 
 const Counter = ({ onCounterValue }) => {
   const [counterValue, setCounterValue] = useOptic(onCounterValue);
@@ -132,7 +132,7 @@ const Counter = ({ onCounterValue }) => {
 Now we can call two instances of `Counter`, each with its own optic, focusing on its own part of the state.
 
 ```tsx title=Counters.tsx {3-4,11-12}
-import { useOptic } from "react-optix";
+import { useOptic } from "react-optics";
 
 const onValueA = onState.focus("counters.counterA.value");
 const onValueB = onState.focus("counters.counterB.value");
@@ -158,7 +158,7 @@ To access it in our component let's change some things.
 Instead of passing to our `Counter` component an optic focusing on the value let's take a step back and focus on the complete counter instead. We will then focus on the value and the step separately in the component.
 
 ```tsx file=Counter.tsx {4-5,12-16}
-import { useOptic } from 'react-optix';
+import { useOptic } from 'react-optics';
 
 const Counter = ({ onCounter }) => {
     const [value, setValue] = useOptic(onCounter.focus('value'));
@@ -184,7 +184,7 @@ const Counter = ({ onCounter }) => {
 ```
 
 ```tsx file=Counters.tsx {3-4,11-12}
-import { useOptic } from "react-optix";
+import { useOptic } from "react-optics";
 
 const onCounterA = onStore.focus("counters.counterA");
 const onCounterB = onStore.focus("counters.counterB");

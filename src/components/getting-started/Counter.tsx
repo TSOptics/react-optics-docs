@@ -1,31 +1,31 @@
-import { Provider, useOptic } from "react-optix";
-import React from "react";
-import onState from "./store";
+import { Provider, useOptic } from 'react-optics';
+import React from 'react';
+import onState from './store';
 
-const onValueA = onState.focus("counters.counterA.value");
+const onValueA = onState.focus('counters.counterA.value');
 
 const NaiveCounter = () => {
-  const [counterValue, setCounterValue] = useOptic(onValueA);
+    const [counterValue, setCounterValue] = useOptic(onValueA);
 
-  return (
-    <div style={{ display: "flex", flexDirection: "column", width: "30%" }}>
-      <button onClick={() => setCounterValue((prev) => prev + 1)}>
-        increment
-      </button>
-      <span style={{ alignSelf: "center" }}>{counterValue}</span>
-      <button onClick={() => setCounterValue((prev) => prev - 1)}>
-        decrement
-      </button>
-    </div>
-  );
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', width: '30%' }}>
+            <button onClick={() => setCounterValue((prev) => prev + 1)}>
+                increment
+            </button>
+            <span style={{ alignSelf: 'center' }}>{counterValue}</span>
+            <button onClick={() => setCounterValue((prev) => prev - 1)}>
+                decrement
+            </button>
+        </div>
+    );
 };
 
 const App = () => {
-  return (
-    <Provider>
-      <NaiveCounter />
-    </Provider>
-  );
+    return (
+        <Provider>
+            <NaiveCounter />
+        </Provider>
+    );
 };
 
 export default App;
