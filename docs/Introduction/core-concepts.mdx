@@ -39,7 +39,7 @@ planets.earth.Europe.France.Paris.arrondissements[2].inhabitants += 1;
 
 However in React we need to make an **immutable update** and create a new `planets` object, otherwise React will not trigger a rerender since the reference didn't change.
 
-```ts {20-21}
+```ts
 const updatedPlanets = {
     ...planets,
     earth: {
@@ -50,22 +50,23 @@ const updatedPlanets = {
                 ...planets.earth.Europe.France,
                 Paris: {
                     ...planets.earth.Europe.France.Paris,
-                    arrondissements: [
-                        ...planets.earth.Europe.France.Paris.arrondissements.slice(
-                            0,
-                            2
-                        ),
-                        {
-                            ...planets.earth.Europe.France.Paris
-                                .arrondissements[2],
-                            inhabitants:
-                                planets.earth.Europe.France.Paris
-                                    .arrondissements[2].inhabitants + 1
-                        },
-                        ...planets.earth.Europe.France.Paris.arrondissements.slice(
-                            3
+                    arrondissements:
+                        // highlight-start
+                        planets.earth.Europe.France.Paris.arrondissements.map(
+                            // highlight-end
+                            (arrondissement, index) => {
+                                // highlight-next-line
+                                return index === 2
+                                    ? {
+                                          ...arrondissement,
+                                          // highlight-start
+                                          inhabitants:
+                                              arrondissement.inhabitants + 1
+                                          // highlight-end
+                                      }
+                                    : arrondissement;
+                            }
                         )
-                    ]
                 }
             }
         }
@@ -73,7 +74,7 @@ const updatedPlanets = {
 };
 ```
 
-Here the highlighted line is the information, the rest is just noise.  
+Here the highlighted lines is the information, the rest is just noise.  
 Such code is extremely verbose and error prone and it only gets worse the deeper we go.  
 With an optic it becomes trivial again:
 
