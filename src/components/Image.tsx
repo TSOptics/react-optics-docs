@@ -1,15 +1,19 @@
-import React, { useContext } from "react";
-import ThemeContext from "@theme/ThemeContext";
+import React, { useContext } from 'react';
+import { useColorMode } from '@docusaurus/theme-common';
 
 const MdxImage = ({ src, srcDark }) => {
-  const { isDarkTheme } = useContext(ThemeContext);
+    const { colorMode } = useColorMode();
 
-  return (
-    <img
-      src={require(`../../static/img/${isDarkTheme ? srcDark : src}`).default}
-      alt="Example autocompletion"
-    />
-  );
+    return (
+        <img
+            src={
+                require(`../../static/img/${
+                    colorMode === 'dark' ? srcDark : src
+                }`).default
+            }
+            alt="Example autocompletion"
+        />
+    );
 };
 
 export default MdxImage;
