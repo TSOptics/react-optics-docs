@@ -1,5 +1,5 @@
 import React from 'react';
-import { Optic, Provider, useOptic } from 'react-optics';
+import { Optic, useOptic } from 'react-optics';
 import onState from './store';
 
 interface Props {
@@ -52,11 +52,5 @@ const CountersWithStep = () => {
         </>
     );
 };
-
-const App = () => (
-    <Provider>
-        <CountersWithStep />
-    </Provider>
-);
 
 export default CountersWithStep;

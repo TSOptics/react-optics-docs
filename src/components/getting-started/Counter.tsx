@@ -1,4 +1,4 @@
-import { Provider, useOptic } from 'react-optics';
+import { useOptic } from 'react-optics';
 import React from 'react';
 import onState from './store';
 
@@ -20,12 +20,4 @@ const NaiveCounter = () => {
     );
 };
 
-const App = () => {
-    return (
-        <Provider>
-            <NaiveCounter />
-        </Provider>
-    );
-};
-
-export default App;
+export default NaiveCounter;

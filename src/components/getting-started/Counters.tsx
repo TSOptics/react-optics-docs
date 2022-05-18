@@ -1,5 +1,5 @@
 import React from 'react';
-import { Optic, Provider, useOptic } from 'react-optics';
+import { Optic, useOptic } from 'react-optics';
 import onState from './store';
 
 interface Props {
@@ -40,10 +40,4 @@ const Counters = () => {
     );
 };
 
-const App = () => (
-    <Provider>
-        <Counters />
-    </Provider>
-);
-
-export default App;
+export default Counters;

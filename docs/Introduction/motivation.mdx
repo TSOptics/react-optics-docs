@@ -1,15 +1,34 @@
+---
+sidebar_position: 1
+---
+
 # Motivation
 
-In react a component is a piece of ui, logic and state that defines its contract via its props. It is this contract that makes them composable and give React its power.
+In React centralizing the state in a **global store** outside of the component tree is a common practice as it makes it possible to read and update this state from anywhere in the app in a performant and predictable way.  
+However this extremely valuable pattern comes with two significant drawbacks that hurt our ability to scale.
 
--   why immutability is important in React
--   why it is hard in javascript
--   why the alternative sucks (normalizing, immer ?)
--   the power of state tree
--   how functional programming already solved the problem
--   how optics unlock this power for immutable structures
--   how react-optics brings the concept to react thanks to typescript, hooks, an idiomatic js api and previous art on react state management.
+-   First thing is **immutability**: React relies on reference change to render so we cannot mutate our state but have to create a new version of it each time we make a change.  
+    However these immutable updates are notoriously verbose and error-prone in Javascript. In non trivial applications where the state is several level deep updating it ends up in the **spread operator pyramid of doom**.  
+    A workaround consists of getting rid of nested state by [**normalizing it**](https://beta.reactjs.org/learn/choosing-the-state-structure#avoid-deeply-nested-state) and using joins to make queries. However it feels more idiomatic to SQL than it is to Javascript and makes it easier to introduce bugs and performance issues to the state access/update logic.  
+    Another option is to use Immer as it allows us to deal with immutable updates while keeping the state structure untouched, but it introduces a kind of cognitive dissonance where we have to knowingly break the rules we have understood and applied for years, while trusting the library to unbreak them with Proxy magic.
 
-In React hoisting your state up in a single place (store or context) is a common practice to share state across your app.
-It allows us to access global state from anywhere in the app
-However such practice comes with signiificant drawbacks and clash with react's principles.
+-   The other issue, arguably the most problematic, is **coupling**: when a component subscribes to a store it creates a **hard dependency** between itself and the piece of global state returned by the selector.  
+    Normally a component receives external state via its props, that’s what makes it composable and allows it to be easily reused and tested in isolation.  
+    All that’s needed to adapt the component to a new context is to pass different props to it, it’s this inherent composability that makes component based frameworks like React so powerful.  
+    But it all breaks down when subscribing to a store, now the component has a dependency to this external piece of state that is not parameterized via the props and consequently can’t be changed;
+    reusability and testability are thrown out the window.  
+    We have to resort to split the component into multiple ones with container components managing the state access and a presentational component receiving the data as props from the containers.  
+    Repeat the process for each component accessing the global state in the app and it all starts to feel like we’re not properly using React anymore.
+
+Well it turns out we can have our cake and eat it, keeping our nested state without introducing coupling while making immutable updates as easy as mutating in-place.  
+That’s where **Optics** come in.
+As a composable pair of getter and setter, an optic focuses on a part of the state and allows us to read and update just this part, without the pains of hand written immutable updates.  
+We can then make our component take an optic as a prop and just like that we **parameterized** its global state access and solved our coupling problem !
+
+But Optics are much more than just the solution to our previously mentioned issues.  
+While we can have relatively simple ones like just focusing on a specific field from a path, they are flexible enough to express complex data access with conditions or conversions, generalizing to multiple targets, filtering them and focusing back to a single value.  
+In the end Optics are a bit like components in some ways: small composable units that can be flexibly arranged in many ways to express complex requirements. That's what makes them ideal for state management in React, we can compose them simultaneously with our components.
+
+:::tip _it's all functions_
+This adequacy of Optics with React is maybe not that surprising considering they both have their roots in functional programming !
+:::
