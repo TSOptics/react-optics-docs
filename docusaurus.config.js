@@ -5,13 +5,15 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 module.exports = {
     title: 'React-Optics',
     tagline: 'Composable state management for react',
-    url: 'https://your-docusaurus-test-site.com',
-    baseUrl: '/',
+    url: 'https://TSOptics.github.io/',
+    baseUrl: '/react-optics-docs/',
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',
     favicon: 'img/favicon.ico',
-    organizationName: 'Optics', // Usually your GitHub org/user name.
-    projectName: 'react-optics', // Usually your repo name.
+    organizationName: 'TSOptics.github.io', // Usually your GitHub org/user name.
+    projectName: 'react-optics-docs', // Usually your repo name.
+    trailingSlash: false,
+    deploymentBranch: 'master',
     themeConfig: {
         navbar: {
             title: '⚛🔍 react-optics',
@@ -24,7 +26,7 @@ module.exports = {
                 },
                 { to: '/blog', label: 'Blog', position: 'left' },
                 {
-                    href: 'https://github.com/facebook/docusaurus',
+                    href: 'https://github.com/TSOptics/react-optics',
                     label: 'GitHub',
                     position: 'right'
                 }
@@ -68,12 +70,12 @@ module.exports = {
                         },
                         {
                             label: 'GitHub',
-                            href: 'https://github.com/facebook/docusaurus'
+                            href: 'https://github.com/TSOptics/react-optics'
                         }
                     ]
                 }
             ],
-            copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`
+            copyright: `Copyright © ${new Date().getFullYear()} Vincent Quillien, Built with Docusaurus.`
         },
         prism: {
             theme: lightCodeTheme,
@@ -88,13 +90,13 @@ module.exports = {
                     sidebarPath: require.resolve('./sidebars.js'),
                     // Please change this to your repo.
                     editUrl:
-                        'https://github.com/facebook/docusaurus/edit/master/website/'
+                        'https://github.com/TSOptics/react-optics-docs/edit/master'
                 },
                 blog: {
                     showReadingTime: true,
                     // Please change this to your repo.
                     editUrl:
-                        'https://github.com/facebook/docusaurus/edit/master/website/blog/'
+                        'https://github.com/TSOptics/react-optics-docs/edit/master/'
                 },
                 theme: {
                     customCss: require.resolve('./src/css/custom.css')
