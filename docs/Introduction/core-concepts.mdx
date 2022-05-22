@@ -152,8 +152,8 @@ They are ...
         playerB: { ...initialPlayerState, id: 2 }
     });
 
-    const onPayerA = onPlayers.focus('playerA');
-    const onPayerB = onPlayers.focus('playerB');
+    const onPlayerA = onPlayers.focus('playerA');
+    const onPlayerB = onPlayers.focus('playerB');
 
     // Headless optic
     const onDamageToMonsters = optic<typeof initialPlayerState>().focus(
@@ -241,7 +241,7 @@ const Weapon = ({ weapon }) => {
         <div>
             <div>name: {weapon.name}</div>
             <div>durability: {weapon.durability}</div>
-            <WeaponDamage stats={weapon.damageTo} />
+            <WeaponStats stats={weapon.damageTo} />
         </div>
     );
 };
@@ -249,7 +249,7 @@ const Weapon = ({ weapon }) => {
 const WeaponStats = ({ damageTo }) => {};
 ```
 
-The `Game` component calls `Player` components which call `Weapon` components wich in turn call a `WeaponDamage` component.  
+The `Game` component calls `Player` components which call `Weapon` components wich in turn call a `WeaponStats` component.  
 The structure is the same as in our state where the **game** has **players** which have **weapons** which in turn have **damage stats**.
 Since both UI and state are represented as tree data structure in React here we can say the UI tree matches the state tree, it branches at the same place and has leaves at the same place.
 
@@ -283,7 +283,7 @@ const Weapon = ({ onWeapon }) => {
         <div>
             <div>name: {weapon.name}</div>
             <div>durability: {weapon.durability}</div>
-            <WeaponDamage onDamageTo={onWeapon.focus('damageTo')} />
+            <WeaponStats onDamageTo={onWeapon.focus('damageTo')} />
         </div>
     );
 };

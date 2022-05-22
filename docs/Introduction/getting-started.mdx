@@ -22,42 +22,17 @@ react-optics requires **React** `16.3` or higher.
 
 ## Installation
 
-With npm:
-
-```bash
+```bash npm2yarn
 npm install react-optics
-```
-
-With yarn:
-
-```bash
-yarn add react-optics
 ```
 
 ## Basic example
 
 No state management documentation is truly complete without a simple counter as an example, so let's get started:
 
-### Provider
-
-First we need to wrap our app with a Provider so we can access the store everywhere.
-You'll only have to it once.
-
-```tsx title=App.tsx
-import { Provider } from 'react-optics';
-
-const App = () => {
-    return (
-        <Provider>
-            <Counters />
-        </Provider>
-    );
-};
-```
-
 ### Creating the store
 
-Next we can create a store by calling `createStore` and passing it an initial value.  
+The first step is to create a store by calling `createStore` and passing it an initial value.  
 It returns an **optic** focusing on the store.
 
 ```tsx
@@ -82,7 +57,7 @@ Let the **code completion** guide you !
 
 ### Using the optic in a component
 
-Just call the hook `useOptic` with your optic ! It has the same API as React's `useState`.
+Just call the hook `useOptic` with your optic ! It returns the focused value and a setter just like React's `useState`.
 
 ```tsx title=Counter.tsx
 import { useOptic } from 'react-optics';
@@ -186,8 +161,8 @@ const Counter = ({ onCounter }) => {
 ```tsx file=Counters.tsx {3-4,11-12}
 import { useOptic } from "react-optics";
 
-const onCounterA = onStore.focus("counters.counterA");
-const onCounterB = onStore.focus("counters.counterB");
+const onCounterA = onState.focus("counters.counterA");
+const onCounterB = onState.focus("counters.counterB");
 
 const Counters = () => {
   const [counters] = useOptic(onState.focus("counters"));

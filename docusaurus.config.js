@@ -89,7 +89,13 @@ module.exports = {
                     sidebarPath: require.resolve('./sidebars.js'),
                     // Please change this to your repo.
                     editUrl:
-                        'https://github.com/TSOptics/react-optics-docs/edit/master'
+                        'https://github.com/TSOptics/react-optics-docs/edit/master',
+                    remarkPlugins: [
+                        [
+                            require('@docusaurus/remark-plugin-npm2yarn'),
+                            { sync: true }
+                        ]
+                    ]
                 },
                 blog: {
                     showReadingTime: true,
