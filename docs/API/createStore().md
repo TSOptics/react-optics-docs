@@ -3,10 +3,7 @@ sidebar_position: 1
 ---
 
 ```ts
-function createStore<T>(
-    initialValue: T,
-    key?: string
-): Optic<T, total, Store<T>>;
+function createStore<T>(initialValue: T, key?: string): Optic<T, total, T>;
 ```
 
 Creates a store initialized to the value passed as argument.  

@@ -1,6 +1,9 @@
 ---
 sidebar_position: 2
+title: useOptic()
 ---
+
+# useOptic(optic)
 
 ```ts
 function useOptic<T, TOpticType extends OpticType>(
@@ -8,7 +11,9 @@ function useOptic<T, TOpticType extends OpticType>(
 ): [FocusedValue<T, TOpticType>, Dispatch<SetStateAction<T>>];
 ```
 
-`useOptic` is a React hook that let's you read and modify the slice of store focused by an optic.  
+---
+
+This hook let's you read and modify the slice of store focused by an optic.  
 Just like React `useState` it returns the value and a setter to change it.
 
 The component will rerender each time the focused value changes.

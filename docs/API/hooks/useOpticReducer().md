@@ -1,6 +1,9 @@
 ---
 sidebar_position: 3
+title: useOpticReducer()
 ---
+
+# useOpticReducer(optic, reducer)
 
 ```tsx
 function useOpticReducer<T, TOpticType extends OpticType, Action>(
@@ -9,7 +12,9 @@ function useOpticReducer<T, TOpticType extends OpticType, Action>(
 ): [FocusedValue<T, TOpticType>, Dispatch<Action>];
 ```
 
-`useOpticReducer` is a React hook that allows you to manage with a reducer the slice of store focused on by an optic.
+---
+
+This hook allows you to manage the slice of store focused on by the optic with a reducer.
 As arguments it takes an optic and a reducer function while it returns the focused value as well as a dispatch function.
 
 It works pretty much just like React `useReducer`, you use the dispatch function to send actions that the reducer will use to compute the next state.  
@@ -28,6 +33,7 @@ const reducer = (state, action, onState) => {
     const onStep = onState.focus('step');
     switch (action.type) {
         case 'increment':
+            // equivalent to: return { ...state, value: state.value + state.step };
             return onValue.set((prev) => prev + state.step, state);
         case 'decrement':
             return onValue.set((prev) => prev - state.step, state);

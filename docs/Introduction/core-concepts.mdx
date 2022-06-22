@@ -155,7 +155,7 @@ They are ...
     const onPlayerA = onPlayers.focus('playerA');
     const onPlayerB = onPlayers.focus('playerB');
 
-    // Headless optic
+    // BaseOptic
     const onDamageToMonsters = optic<typeof initialPlayerState>().focus(
         'inventory.primaryWeapon.damageTo.monsters'
     );
@@ -167,9 +167,9 @@ They are ...
     onPlayerB.compose(onDamageToMonsters);
     ```
 
-    :::info Headless optic
-    A headless optic doesn't originate from `createStore` but is instead created with `optic()`.  
-    They are useful when composed with stateful optics as shown above.
+    :::info Base Optic
+    A BaseOptic doesn't originate from `createStore()` but instead from the `optic()` function.  
+    They aren't linked to a store and can't be passed to `useOptic()`, they however can be composed with stateful optics as shown above.
     :::
 
 ## UI and state: connecting trees
