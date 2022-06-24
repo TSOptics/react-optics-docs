@@ -1,5 +1,6 @@
 ---
 title: .compose()
+sidebar_position: 5
 ---
 
 # .compose(baseOptic): Optic
@@ -7,6 +8,8 @@ title: .compose()
 ```ts
 Optic<B, _, A>.compose: <C>(baseOptic: BaseOptic<C, _, B>) => Optic<C, _, A>;
 ```
+
+---
 
 On an optic on B from A, the compose method takes a base optic on C from B and returns a new optic on C from A.
 

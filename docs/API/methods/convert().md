@@ -1,6 +1,6 @@
 ---
-sidebar_position: 2
 title: .convert()
+sidebar_position: 4
 ---
 
 # .convert(to, from): Optic
