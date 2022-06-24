@@ -6,10 +6,10 @@ title: useKeyedOptics()
 # useKeyedOptics(opticOnArray, keyExtractor)
 
 ```ts
-function useKeyedOptics<T, TOpticType extends OpticType, S>(
-    onArray: Optic<T[], TOpticType, S>,
+function useKeyedOptics<T>(
+    onArray: Optic<T[]>,
     keyExtractor: (t: T) => string
-): (key: string) => Optic<T, TOpticType, S>;
+): (key: string) => Optic<T>;
 ```
 
 ---

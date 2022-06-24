@@ -6,9 +6,7 @@ title: useOptic()
 # useOptic(optic)
 
 ```ts
-function useOptic<T, TOpticType extends OpticType>(
-    optic: Optic<T, TOpticType, Store>
-): [FocusedValue<T, TOpticType>, Dispatch<SetStateAction<T>>];
+function useOptic<T>(optic: Optic<T>): [T, Dispatch<SetStateAction<T>>];
 ```
 
 ---

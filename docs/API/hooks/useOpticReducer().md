@@ -6,10 +6,10 @@ title: useOpticReducer()
 # useOpticReducer(optic, reducer)
 
 ```tsx
-function useOpticReducer<T, TOpticType extends OpticType, Action>(
-    onState: Optic<T, TOpticType, Store>,
+function useOpticReducer<T, TOpticType, Action>(
+    onState: Optic<T, TOpticType>,
     reducer: (state: T, action: Action, onState: Optic<T, total, T>) => T
-): [FocusedValue<T, TOpticType>, Dispatch<Action>];
+): [T, Dispatch<Action>];
 ```
 
 ---
