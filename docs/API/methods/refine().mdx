@@ -1,0 +1,67 @@
+---
+title: .refine()
+sidebar_position: 6
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# .refine(refiner): Optic
+
+```ts
+Optic<A>.refine = <B>(refiner: (a: A) => B | false) => Optic<B, partial | mapped>;
+```
+
+---
+
+This method allows you to _narrow_ the type focused by the original optic.  
+It returns a new partial optic focused on the original value in its narrowed type or undefined if the narrowing failed.
+
+The `refiner` function must return the original value in its narrowed type or `false` if it can't be narrowed to this type.
+
+## Examples:
+
+### - On the branch of a discriminated union
+
+```ts
+type Result<T> =
+    | { type: 'success'; value: T }
+    | { type: 'failure'; errorMessage: string };
+
+const onResult = createStore<Result<number>>({ type: 'success', value: 42 });
+
+const [, setResult] = useOptic(onResult);
+
+// highlight-start
+const onSuccess = onResult.refine(
+    (result) => result.type === 'success' && result
+);
+// onSuccess: Optic<{ type: 'success'; value: number }, partial>
+// highlight-end
+
+const [success] = useOptic(onSuccess);
+// success === { type: 'success', value: 42 }
+
+setResult({ type: 'failure', errorMessage: 'Catastrophic meltdown' });
+// success === undefined
+```
+
+### - On a javascript built-in type
+
+```ts
+const onUnknownValue = createStore<unknown>();
+
+const onNumber = onUnknownValue.refine(
+    (unknownValue) => typeof unknownValue === 'number' && unknownValue
+);
+// onNumber: Optic<number, partial>
+```
+
+### - On a custom type with a type guard
+
+```ts
+function isMyType(value: any): value is MyType;
+
+const onMyType = onState.refine((value) => isMyType(value) && value);
+// onMyType: Optic<MyType, partial>
+```
