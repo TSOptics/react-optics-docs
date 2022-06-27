@@ -38,3 +38,14 @@ const [c] = useOptic(onC);
 :::tip partial optic
 A path that access nullable properties with `?.` yields a [**partial**](../../guide/partial) optic.
 :::
+
+You also can focus on an array's element with its index:
+
+```ts
+const onCities = createStore(['Paris', 'Berlin', 'Madrid']);
+
+const onThirdCity = onCities.focus(2);
+
+const [city] = useOptic(onThirdCity);
+// city === 'Madrid'
+```

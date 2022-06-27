@@ -7,7 +7,7 @@ sidebar_position: 3
 
 ---
 
-From an optic focused on an object, this method allows you to derive optics for multiple properties of the object.
+This method allows you to derive optics for multiple properties of an object in a single expression.
 
 ```ts
 const onState = createStore({ name: 'Leo', age: 32, married: false });
