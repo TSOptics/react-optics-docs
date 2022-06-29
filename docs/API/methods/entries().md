@@ -6,13 +6,15 @@ sidebar_position: 9
 # .entries(): Optic
 
 ```ts
-Optic<A extends Record<string, infer V>>.entries: () => Optic<
-    [key: string, value: V],
+Optic<A extends Record<string, infer Value>>.entries: () => Optic<
+    [key: string, value: Value],
     mapped
 >;
 ```
 
-Analogous to [Object.entries](https://developer.mozilla.org/docs/web/javascript/reference/global_objects/object/entries), this method returns a [mapped optic](<../../guides/mapped optics()>) focused on `[key, value]` pairs.  
+---
+
+Analogous to [Object.entries](https://developer.mozilla.org/docs/web/javascript/reference/global_objects/object/entries), this method returns a [mapped optic](<../../guides/mapped optics()>) focused on the object's `[key, value]` pairs.  
 Its purpose is to map over a record, allowing you to change both keys and values.
 
 ### Example:
