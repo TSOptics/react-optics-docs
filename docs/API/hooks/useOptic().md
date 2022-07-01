@@ -3,7 +3,7 @@ sidebar_position: 2
 title: useOptic()
 ---
 
-# useOptic(optic)
+# useOptic(optic): [value, setValue]
 
 ```ts
 function useOptic<T>(optic: Optic<T>): [T, Dispatch<SetStateAction<T>>];

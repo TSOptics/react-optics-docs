@@ -3,7 +3,7 @@ sidebar_position: 3
 title: useOpticReducer()
 ---
 
-# useOpticReducer(optic, reducer)
+# useOpticReducer(optic, reducer): [value, dispatch]
 
 ```tsx
 function useOpticReducer<T, TOpticType, Action>(

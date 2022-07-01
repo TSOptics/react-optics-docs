@@ -3,7 +3,7 @@ sidebar_position: 4
 title: useKeyedOptics()
 ---
 
-# useKeyedOptics(opticOnArray, keyExtractor)
+# useKeyedOptics(opticOnArray, keyExtractor): opticFromKey
 
 ```ts
 function useKeyedOptics<T>(
