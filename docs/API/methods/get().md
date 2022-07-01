@@ -16,12 +16,15 @@ A [`BaseOptic`](../../guide/BaseOptic) doesn't have a root, unlike optics origin
 ### Example
 
 ```ts
-const onName = optic<{
+type User = {
     name: string;
     age: number;
     verified: boolean;
-}>().focus('name');
+};
+const onName = optic<User>().focus('name');
 
-const name = onName.get({ name: 'Léon', age: 23, verified: false });
+const user: User = { name: 'Léon', age: 23, verified: false };
+
+const name = onName.get(user);
 // name = 'Léon'
 ```
