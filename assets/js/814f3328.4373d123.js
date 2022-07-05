@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkreact_optics_docs=self.webpackChunkreact_optics_docs||[]).push([[2535],{5641:function(e){e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Welcome","permalink":"/react-optics-docs/blog/welcome"},{"title":"Hello","permalink":"/react-optics-docs/blog/hello-world"},{"title":"Hola","permalink":"/react-optics-docs/blog/hola"}]}')}}]);

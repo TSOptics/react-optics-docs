@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkreact_optics_docs=self.webpackChunkreact_optics_docs||[]).push([[4500],{4688:function(o){o.exports=JSON.parse('{"permalink":"/react-optics-docs/blog/tags/facebook","page":1,"postsPerPage":10,"totalPages":1,"totalCount":1,"blogDescription":"Blog","blogTitle":"Blog"}')}}]);

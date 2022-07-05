@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkreact_optics_docs=self.webpackChunkreact_optics_docs||[]).push([[7850],{5411:function(s){s.exports=JSON.parse('{"label":"docusaurus","permalink":"/react-optics-docs/blog/tags/docusaurus","allTagsPath":"/react-optics-docs/blog/tags","count":3}')}}]);
