@@ -28,5 +28,5 @@ onStates.focus(1).focus('capital').getState(); // 'Springfield'
 
 onStates.focus(0).focus('name').getState(); // 'Virginia'
 
-onStates.map().focus('inhabitants'); // [8_535_519, 12_812_508]
+onStates.map().focus('inhabitants').getState(); // [8_535_519, 12_812_508]
 ```

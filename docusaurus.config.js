@@ -7,7 +7,7 @@ module.exports = {
     tagline: 'Composable state management for react',
     url: 'https://TSOptics.github.io/',
     baseUrl: '/react-optics-docs/',
-    onBrokenLinks: 'throw',
+    onBrokenLinks: 'warn',
     onBrokenMarkdownLinks: 'warn',
     favicon: 'img/favicon.ico',
     organizationName: 'TSOptics', // Usually your GitHub org/user name.
