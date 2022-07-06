@@ -5,8 +5,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 module.exports = {
     title: 'React-Optics',
     tagline: 'Composable state management for react',
-    url: 'https://TSOptics.github.io/',
-    baseUrl: '/react-optics-docs/',
+    url: 'https://react-optics.org',
+    baseUrl: '/',
     onBrokenLinks: 'warn',
     onBrokenMarkdownLinks: 'warn',
     favicon: 'img/favicon.ico',
