@@ -329,14 +329,13 @@ const onLowestDurability = onPlayerList
     .map()
     .focus('inventory')
     .map()
-    .minBy((weapon) => weapon.durability)
-    .toTotal();
+    .minBy((weapon) => weapon.durability);
 
 const AboutToBreak = () => {
     return (
         <>
             Most damaged weapon:
-            <Weapon onWeapon={onLowestDurability} />
+            <Weapon onWeapon={onLowestDurability as Optic<Weapon>} />
         </>
     );
 };
@@ -345,8 +344,9 @@ const AboutToBreak = () => {
 Here the `onLowestDurability` optic first focuses on all players (first call to `map`) then on their inventory then on all their weapons (second call to `map`) then finally focuses on the weapon with the lowest durability with `minBy`.  
 The combination of the `map` method with other methods like `minBy` or `findFirst` allows us to focus on very specific elements like the most damaged weapon, or the first weapon that deals more than 10 damage to humans or again the player with the most HPs.
 
-:::info
-The final call to `toTotal` is to tell the type system: yes I'm aware that both inventories are arrays that can theoretically be empty but here I know that they are not so I know that my optic will not return undefined.
+:::info typecast
+Here we cast `onLowestDurability` to a total optic (`Optic<Weapon>` is the shorthand of `Optic<Weapon, total>`) because the `Weapon` component expects a total optic while `onLowestDurability` is a **partial** one.  
+Downcasting from partial to total is unsafe but useful in situations where we have invariants that can't be guessed by the type system (e.g., the playerList and inventories cannot be empty).
 :::
 
 It's the ability to express such optics that allows us to connect our UI tree to our state tree and plug the gap between them where they diverge.
