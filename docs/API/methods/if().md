@@ -11,7 +11,7 @@ Optic<A>.if: (predicate: (a: A) => boolean) => Optic<A, partial | mapped>;
 
 ---
 
-This method takes a predicate and return a new optic focused either on the original value or undefined if the predicate returns false.
+This method takes a predicate and return a new partial optic focused either on the original value or undefined if the predicate returns false.
 
 ### Example:
 
