@@ -1,0 +1,4 @@
+---
+title: Outside of components
+---
+
