@@ -3,7 +3,7 @@ title: Total vs partial
 sidebar_position: 1
 ---
 
-# total vs partial optics
+# Total vs partial optics
 
 Optics can either be total or partial:
 
