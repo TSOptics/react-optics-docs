@@ -341,8 +341,8 @@ const AboutToBreak = () => {
 };
 ```
 
-Here the `onLowestDurability` optic first focuses on all players (first call to `map`) then on their inventory then on all their weapons (second call to `map`) then finally focuses on the weapon with the lowest durability with `minBy`.  
-The combination of the `map` method with other methods like `minBy` or `findFirst` allows us to focus on very specific elements like the most damaged weapon, or the first weapon that deals more than 10 damage to humans or again the player with the most HPs.
+Here the `onLowestDurability` optic first focuses on all players (first call to [`.map()`](../Guides/mapped_optics)) then on their inventory then on all their weapons (second call to `.map()`) then finally focuses on the weapon with the lowest durability with `.min()`.  
+The combination of the `.map()` method with other methods like `.min()` or `.findFirst()` allows us to focus on very specific elements like the most damaged weapon, or the first weapon that deals more than 10 damage to humans or again the player with the most HPs.
 
 :::info typecast
 Here we cast `onLowestDurability` to a total optic (`Optic<Weapon>` is the shorthand of `Optic<Weapon, total>`) because the `Weapon` component expects a total optic while `onLowestDurability` is a [**partial**](../Guides/total_partial) one.  
@@ -350,8 +350,6 @@ Downcasting from partial to total is unsafe but useful in situations where we ha
 :::
 
 It's the ability to express such optics that allows us to connect our UI tree to our state tree and plug the gap between them where they diverge.
-
-You can learn more about `map` and methods like `minBy` in the **map reduce** section.
 
 ### Testability and reusability
 
