@@ -30,12 +30,6 @@ const FeatureList = [
         Svg: require('../../static/img/typescript.svg').default,
         DarkSvg: require('../../static/img/typescript-dark.svg').default,
         description: <>Typesafe and nullsafe paths with full auto-completion.</>
-    },
-    {
-        title: 'Reactish',
-        Svg: require('../../static/img/react.svg').default,
-        DarkSvg: require('../../static/img/react-dark.svg').default,
-        description: <>Sticks to modern React's style and principles.</>
     }
 ];
 
