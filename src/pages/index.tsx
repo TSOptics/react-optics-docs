@@ -8,7 +8,7 @@ export default function Home() {
     const { siteConfig } = useDocusaurusContext();
     return (
         <Layout
-            title={`react-optics 🔍`}
+            title={`React-Optics`}
             description="Description will go into a meta tag in <head />"
         >
             <HomepageHeader />

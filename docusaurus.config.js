@@ -9,13 +9,17 @@ module.exports = {
     baseUrl: '/',
     onBrokenLinks: 'warn',
     onBrokenMarkdownLinks: 'warn',
-    favicon: 'img/favicon.ico',
+    favicon: 'img/favicon/favicon.ico',
     organizationName: 'TSOptics', // Usually your GitHub org/user name.
     projectName: 'react-optics-docs', // Usually your repo name.
     trailingSlash: false,
     themeConfig: {
         navbar: {
-            title: '⚛🔍 react-optics',
+            title: 'React-Optics',
+            logo: {
+                src: 'img/react-optics.svg',
+                srcDark: 'img/react-optics-dark.svg'
+            },
             items: [
                 {
                     type: 'doc',
